@@ -23,6 +23,7 @@ class controller:
 		demand = ds.getDemand()
 		coef = ds.getCoef()
 		jcoef = (cap[1]*coef)/cap[0]
+		dcoef = (cap[2]*coef)/cap[0]
 		#figure out database changes
 		#only use EU DB
 		databaseDemand = demand[0] + demand[1] + demand[2]
@@ -41,12 +42,12 @@ class controller:
 			]
 		
 
-		if databaseDemand - (cap[2]/5) > databaseCurrent:
-			while databaseDemand - (cap[2]/5) > databaseCurrent:
+		if databaseDemand - dcoef > databaseCurrent:
+			while databaseDemand - dcoef > databaseCurrent:
 				self.changeNums[7]+=1
 				databaseCurrent+=cap[2]
-		elif databaseCurrent > databaseDemand + (cap [2] - (cap[2]/3)):
-			while databaseCurrent > databaseDemand + (cap [2] - (cap[2]/3)):
+		elif databaseCurrent > databaseDemand + (cap [2] - dcoef):
+			while databaseCurrent > databaseDemand + (cap [2] - dcoef):
 				#print "while " + str(databaseCurrent) + ' > ' + str(databaseDemand) + " + " + str((cap [2] - (cap[2]/5)))
 				self.changeNums[7]-=1
 				databaseCurrent-=cap[2]
