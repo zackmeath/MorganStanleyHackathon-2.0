@@ -1,17 +1,20 @@
-import socket, sys
-class ServerConnector:
-	def init(self):
-		self.port = raw_input("Please Enter the port being used: ")
-		self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		self.sock.connect(("hackathon.hopto.org", int(self.port)))
-		self.sock.send("INIT TeamName")
-		print self.sock.recv(4096)
+import httplib, json, socket
+ class ServerConnector:
+ 	def init(self):
+		value = {
+		"Command": "INIT",
+		"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7"
+			# "ChangeRequest": nil
+		}
+		headers = {
+		            'Content-type': 'application/json',
+		            'Accept': 'application/json',
+		            }
 
-	def send(self, toSend):
-			self.sock.send(toSend)
-
-	def recv(self):
-		recv = self.sock.recv(4096)
-		if recv = 'END':
-			print "DONE"
-		return recv
+		jvalue = json.dumps(value)
+		conn = httplib.HTTPConnection('107.20.243.77', 80)
+		conn.request('POST', '/api/hermes', jvalue, headers)
+		response = conn.getresponse()
+		ret = (response.status, response.reason, response.read())
+		
+		conn.close()
