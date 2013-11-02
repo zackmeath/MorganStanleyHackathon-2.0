@@ -2,7 +2,7 @@ class DataStore:
 	def __init__(self):
 		self.demand = [0,0,0]
 		self.config = [0,0,0,0,0,0,0,0,0]
-		self.capacity = []
+		self.capacity = [0,0,0]
 
 	def avgDemand(self, demand):
 		#take in "demand" data and store it into the list self.demand (average it)

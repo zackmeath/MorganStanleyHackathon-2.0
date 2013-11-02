@@ -8,6 +8,7 @@ class ServerConnector:
 		value = {
 		"Command": "INIT",
 		"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7"
+		#"Token": "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1"
 		}
 		headers = {
 		            'Content-type': 'application/json',
@@ -16,20 +17,27 @@ class ServerConnector:
 
 		jvalue = json.dumps(value)
 		conn = httplib.HTTPConnection('107.20.243.77', 80)
+		#conn = httplib.HTTPConnection('uat.hermes.wha.la', 80)
 		conn.request('POST', '/api/hermes', jvalue, headers)
 		response = conn.getresponse()
 		ret = json.loads(str((response.status, response.reason, response.read())[2]))
 		conn.close()
 		DS = DataStore()
 		ctrl = controller()
+		myFile = open('output.txt', 'w')
+		myFile.write(str(ret))
+		myFile.close()
 		looptime = ret['ServerState']['ServerTiers']['DB']['ServerStartTurnTime']
 
-		while ret['ServerState']['TurnNo'] < 1440:
+		#while ret['ServerState']['TurnNo'] < 10080:
+		while True:
 			x = 0
+
 			while x <=looptime-1:
 				value = {
 				"Command": "PLAY",
 				"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7"
+				#"Token": "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1"
 				}
 				headers = {
 				            'Content-type': 'application/json',
@@ -37,6 +45,7 @@ class ServerConnector:
 				            }
 				jvalue = json.dumps(value)
 				conn = httplib.HTTPConnection('107.20.243.77', 80)
+				#conn = httplib.HTTPConnection('uat.hermes.wha.la', 80)
 				conn.request('POST', '/api/hermes', jvalue, headers)
 				response = conn.getresponse()
 				ret = json.loads(str((response.status, response.reason, response.read())[2]))
@@ -121,6 +130,7 @@ class ServerConnector:
 			value = {
 			"Command": "CHNG",
 			"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7",
+			#"Token": "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1",
 			"ChangeRequest": jsonchange
 			}
 			headers = {
@@ -129,15 +139,19 @@ class ServerConnector:
 			}
 			jvalue = json.dumps(value)
 			conn = httplib.HTTPConnection('107.20.243.77', 80)
+			#conn = httplib.HTTPConnection('uat.hermes.wha.la', 80)
+
 			conn.request('POST', '/api/hermes', jvalue, headers)
 			response = conn.getresponse()
 			ret = json.loads(str((response.status, response.reason, response.read())[2]))
 
 
 
+
 			value = {
 			"Command": "PLAY",
 			"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7"
+			#"Token": "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1",
 			}
 			headers = {
 			            'Content-type': 'application/json',
@@ -145,6 +159,7 @@ class ServerConnector:
 			            }
 			jvalue = json.dumps(value)
 			conn = httplib.HTTPConnection('107.20.243.77', 80)
+			#conn = httplib.HTTPConnection('uat.hermes.wha.la', 80)
 			conn.request('POST', '/api/hermes', jvalue, headers)
 			response = conn.getresponse()
 			ret = json.loads(str((response.status, response.reason, response.read())[2]))
@@ -170,10 +185,10 @@ class ServerConnector:
 			DS.setConfig(config)
 
 			conn.close()
-
+			print 'Turn: ' + str(ret['ServerState']['TurnNo'])
 			print demand
-			print str(config[0]) + ' ' + str(config[1]) + ' ' + str(config[2]) + ' ' + '\n' + str(config[3]) + ' ' + str(config[4]) + ' ' + str(config[5]) + ' ' + '\n' + str(config[6]) + ' ' + str(config[7]) + ' ' + str(config[8])
-
+			print '  ' + str(config[0]) + '    ' + str(config[1]) + '    ' + str(config[2]) + '    ' + '\n  ' + str(config[3]) + '    ' + str(config[4]) + '    ' + str(config[5]) + '   ' + '\n  ' + str(config[6]) + '    ' + str(config[7]) + '    ' + str(config[8])
+			print ''
 			conn.close()
 
 
