@@ -22,7 +22,12 @@ class DataStore:
 		self.config = iconfig
 	def setCapacity(self, icapacity):
 		self.capacity = icapacity
+	def setCoef(self, icoef):
+		self.coef = icoef
 
+
+	def getCoef(self):
+		return self.coef 
 	def getConfig(self):
 		return self.config
 	def getDemand(self):

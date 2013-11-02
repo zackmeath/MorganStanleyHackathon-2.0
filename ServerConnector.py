@@ -28,6 +28,9 @@ class ServerConnector:
 		myFile.write(str(ret))
 		myFile.close()
 		looptime = ret['ServerState']['ServerTiers']['DB']['ServerStartTurnTime']
+		coef = (ret["ServerState"]["CostPerServer"] / ret["ServerState"]["ProfitConstant"])
+
+		DS.setCoef(coef)
 
 		#while ret['ServerState']['TurnNo'] < 10080:
 		while True:
