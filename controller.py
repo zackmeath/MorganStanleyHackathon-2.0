@@ -23,7 +23,7 @@ class controller:
 		demand = ds.getDemand()
 		coef = ds.getCoef()
 		jcoef = (cap[1]*coef)/cap[0]
-		dcoef = (cap[2]*coef)/cap[0]
+		dcoef = (cap[2]*jcoef)/cap[1]
 		#figure out database changes
 		#only use EU DB
 		databaseDemand = demand[0] + demand[1] + demand[2]
@@ -52,18 +52,6 @@ class controller:
 				self.changeNums[7]-=1
 				databaseCurrent-=cap[2]
 		
-
-
-		# freespace
-		freespace = [
-		current[0] - demand[0],
-		current[1] - demand[0],
-		current[2] - demand[0],
-		current[3] - demand[1],
-		current[4] - demand[1],
-		current[5] - demand[1]
-		]
-
 		#make sure 1 is up if needed
 		# if config[0] == 0 and demand[0] > 25:
 		# 	self.changeNums[0]+=1
