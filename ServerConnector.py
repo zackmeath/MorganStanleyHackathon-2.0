@@ -7,8 +7,8 @@ class ServerConnector:
  	def __init__(self):
 		value = {
 		"Command": "INIT",
-		#"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7"
-		"Token": "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1"
+		"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7"
+		#"Token": "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1"
 		}
 		headers = {
 		            'Content-type': 'application/json',
@@ -16,8 +16,8 @@ class ServerConnector:
 		            }
 
 		jvalue = json.dumps(value)
-		#conn = httplib.HTTPConnection('107.20.243.77', 80)
-		conn = httplib.HTTPConnection('uat.hermes.wha.la', 80)
+		conn = httplib.HTTPConnection('107.20.243.77', 80)
+		#conn = httplib.HTTPConnection('uat.hermes.wha.la', 80)
 		conn.request('POST', '/api/hermes', jvalue, headers)
 		response = conn.getresponse()
 		ret = json.loads(str((response.status, response.reason, response.read())[2]))
@@ -31,6 +31,8 @@ class ServerConnector:
 		coef = (ret["ServerState"]["CostPerServer"] / ret["ServerState"]["ProfitConstant"])
 
 		DS.setCoef(coef)
+		research = None
+		didGrid = False
 
 		#while ret['ServerState']['TurnNo'] < 10080:
 		while True:
@@ -39,16 +41,16 @@ class ServerConnector:
 			while x <=looptime-1:
 				value = {
 				"Command": "PLAY",
-				#"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7"
-				"Token": "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1"
+				"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7"
+				#"Token": "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1"
 				}
 				headers = {
 				            'Content-type': 'application/json',
 				            'Accept': 'application/json',
 				            }
 				jvalue = json.dumps(value)
-				#conn = httplib.HTTPConnection('107.20.243.77', 80)
-				conn = httplib.HTTPConnection('uat.hermes.wha.la', 80)
+				conn = httplib.HTTPConnection('107.20.243.77', 80)
+				#conn = httplib.HTTPConnection('uat.hermes.wha.la', 80)
 				conn.request('POST', '/api/hermes', jvalue, headers)
 				response = conn.getresponse()
 				ret = json.loads(str((response.status, response.reason, response.read())[2]))
@@ -76,7 +78,11 @@ class ServerConnector:
 				conn.close()
 				x+=1
 
+			
 
+			if ret['ServerState']['TurnNo'] >= 2000 and not (didGrid):
+				didGrid = True
+				research = "Grid"
 			#Calculate free space
 			capacity = [ ( ret['ServerState']['ServerTiers']['WEB']['ServerPerformance']['CapactityLevels'][0]['UpperLimit'] + ret['ServerState']['ServerTiers']['WEB']['ServerPerformance']['CapactityLevels'][1]['UpperLimit'] ) / 2]
 			capacity.append(( ret['ServerState']['ServerTiers']['JAVA']['ServerPerformance']['CapactityLevels'][0]['UpperLimit'] + ret['ServerState']['ServerTiers']['JAVA']['ServerPerformance']['CapactityLevels'][1]['UpperLimit'] ) / 2)
@@ -126,14 +132,17 @@ class ServerConnector:
 							}
 						}
 					}
-					}
+				
+					},
+					"UpgradeToResearch": research
 				}
-			
+			if research != None:
+				research = None
 
 			value = {
 			"Command": "CHNG",
-			#"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7",
-			"Token": "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1",
+			"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7",
+			#"Token": "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1",
 			"ChangeRequest": jsonchange
 			}
 			headers = {
@@ -141,8 +150,8 @@ class ServerConnector:
 			            'Accept': 'application/json',
 			}
 			jvalue = json.dumps(value)
-			#conn = httplib.HTTPConnection('107.20.243.77', 80)
-			conn = httplib.HTTPConnection('uat.hermes.wha.la', 80)
+			conn = httplib.HTTPConnection('107.20.243.77', 80)
+			#conn = httplib.HTTPConnection('uat.hermes.wha.la', 80)
 
 			conn.request('POST', '/api/hermes', jvalue, headers)
 			response = conn.getresponse()
@@ -153,16 +162,16 @@ class ServerConnector:
 
 			value = {
 			"Command": "PLAY",
-			#"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7"
-			"Token": "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1",
+			"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7"
+			#"Token": "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1",
 			}
 			headers = {
 			            'Content-type': 'application/json',
 			            'Accept': 'application/json',
 			            }
 			jvalue = json.dumps(value)
-			#conn = httplib.HTTPConnection('107.20.243.77', 80)
-			conn = httplib.HTTPConnection('uat.hermes.wha.la', 80)
+			conn = httplib.HTTPConnection('107.20.243.77', 80)
+			#conn = httplib.HTTPConnection('uat.hermes.wha.la', 80)
 			conn.request('POST', '/api/hermes', jvalue, headers)
 			response = conn.getresponse()
 			ret = json.loads(str((response.status, response.reason, response.read())[2]))
@@ -186,12 +195,13 @@ class ServerConnector:
 
 			DS.resetDemand(demand)
 			DS.setConfig(config)
-			
+
 			coef = (ret["ServerState"]["CostPerServer"] / ret["ServerState"]["ProfitConstant"])
 			DS.setCoef(coef)
 
 			conn.close()
 			print 'Turn: ' + str(ret['ServerState']['TurnNo'])
+			print didGrid
 			print demand
 			print '  ' + str(config[0]) + '    ' + str(config[1]) + '    ' + str(config[2]) + '    ' + '\n  ' + str(config[3]) + '    ' + str(config[4]) + '    ' + str(config[5]) + '   ' + '\n  ' + str(config[6]) + '    ' + str(config[7]) + '    ' + str(config[8])
 			print ''
