@@ -22,9 +22,9 @@ class ServerConnector:
 		conn.close()
 		DS = DataStore()
 		ctrl = controller()
-		looptime = ret['ServerState']['ServerTiers']['DB']['ServerRegions']['EU']['NoOfTransactionsInput']
+		looptime = ret['ServerState']['ServerTiers']['DB']['ServerStartTurnTime']
 
-		while True:
+		while ret['ServerState']['TurnNo'] < 1440:
 			x = 0
 			while x <=looptime-1:
 				value = {
@@ -72,22 +72,52 @@ class ServerConnector:
 
 			DS.setCapacity(capacity)
 			changes = ctrl.calc(DS)
-			jsonchange = {
-			"Servers":
-				{
-				"WEB":
-					{
-					"ServerRegions":
-						{
-						"NA":
-							{
-							"NodeCount":1
+			jsonchange = {"Servers":{
+				"WEB":{
+					"ServerRegions":{
+						"AP":{
+							"NodeCount":changes[2]
+							},
+						"EU":{
+							"NodeCount":changes[1]
+							},
+						"NA":{
+							"NodeCount":changes[0]
+							}
+						}
+					},
+
+				"JAVA":{
+					"ServerRegions":{
+						"NA":{
+							"NodeCount":changes[3]
+							},
+						"EU":{
+							"NodeCount":changes[4]
+							},
+						"AP":{
+							"NodeCount":changes[5]
+							}
+						}
+					},
+
+				"DB":{
+					"ServerRegions":{
+						"NA":{
+							"NodeCount":changes[6]
+							},
+						"EU":{
+							"NodeCount":changes[7]
+							},
+						"AP":{
+							"NodeCount":changes[8]
 							}
 						}
 					}
+					}
 				}
-			}
-			jsonchange = json.dumps(jsonchange)
+			
+
 			value = {
 			"Command": "CHNG",
 			"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7",
@@ -102,7 +132,6 @@ class ServerConnector:
 			conn.request('POST', '/api/hermes', jvalue, headers)
 			response = conn.getresponse()
 			ret = json.loads(str((response.status, response.reason, response.read())[2]))
-			print ret 
 
 
 

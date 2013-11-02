@@ -20,7 +20,7 @@ class controller:
 		]
 
 		demand = ds.getDemand()
-		databaseDemand = demand[0] + demand[2] + demand[2]
+		databaseDemand = demand[0] + demand[1] + demand[2]
 		databaseCurrent = config[7] * cap[2]
 		if databaseDemand < 25:
 			return [
@@ -34,14 +34,22 @@ class controller:
 			-1*config[7],
 			-1*config[8]
 			]
+		print ''
+		print "DatabaseDemand: " + str(databaseDemand)
+		print "DatabaseCurrent: " + str(databaseCurrent)
+		
+
 		if databaseDemand - (cap[2]/5) > databaseCurrent:
 			while databaseDemand - (cap[2]/5) > databaseCurrent:
 				self.changeNums[7]+=1
 				databaseCurrent+=cap[2]
-		elif databaseCurrent > databaseDemand + (cap [2] - (cap[2]/3)):
-			while databaseCurrent > databaseDemand + (cap [2] - (cap[2]/3)):
+		elif databaseCurrent > databaseDemand + (cap [2] - (cap[2]/5)):
+			while databaseCurrent > databaseDemand + (cap [2] - (cap[2]/5)):
+				#print "while " + str(databaseCurrent) + ' > ' + str(databaseDemand) + " + " + str((cap [2] - (cap[2]/5)))
 				self.changeNums[7]-=1
 				databaseCurrent-=cap[2]
+		print self.changeNums[7]
+		
 		freespace = [
 		current[0] - demand[0],
 		current[1] - demand[0],
