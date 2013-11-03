@@ -31,8 +31,11 @@ class ServerConnector:
 		coef = (ret["ServerState"]["CostPerServer"] / ret["ServerState"]["ProfitConstant"])
 
 		DS.setCoef(coef)
+		p = None
 		research = None
 		didGrid = False
+		progression = [None, "GRID", "GREEN", None ]
+
 
 		#while ret['ServerState']['TurnNo'] < 10080:
 		while True:
@@ -80,9 +83,14 @@ class ServerConnector:
 
 			
 
-			if ret['ServerState']['TurnNo'] >= 2000 and not (didGrid):
+			if ret['ServerState']['TurnNo'] <= 9000 and ret["ServerState"]["ProfitAccumulated"] >= 750000:
 				didGrid = True
-				research = "Grid"
+				try:
+					if ret["ServerState"]["ResearchUpgradeState"]["GRID"] == -1:
+						research = "GREEN"
+				except:
+					research = "GRID"
+				p = research
 			#Calculate free space
 			capacity = [ ( ret['ServerState']['ServerTiers']['WEB']['ServerPerformance']['CapactityLevels'][0]['UpperLimit'] + ret['ServerState']['ServerTiers']['WEB']['ServerPerformance']['CapactityLevels'][1]['UpperLimit'] ) / 2]
 			capacity.append(( ret['ServerState']['ServerTiers']['JAVA']['ServerPerformance']['CapactityLevels'][0]['UpperLimit'] + ret['ServerState']['ServerTiers']['JAVA']['ServerPerformance']['CapactityLevels'][1]['UpperLimit'] ) / 2)
@@ -156,10 +164,25 @@ class ServerConnector:
 			conn.request('POST', '/api/hermes', jvalue, headers)
 			response = conn.getresponse()
 			ret = json.loads(str((response.status, response.reason, response.read())[2]))
+			if research != None:
+				research = None
+				jsonchange = {"Servers":{
+					"WEB":{"UpgradeToResearch": "Green"}}}
+				value = {
+				"Command": "CHNG",
+				"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7",
+				#"Token": "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1",
+				"ChangeRequest": jsonchange
+				}
+				headers = {'Content-type': 'application/json','Accept': 'application/json',}
+				jvalue = json.dumps(value)
+				conn = httplib.HTTPConnection('107.20.243.77', 80)
+				#conn = httplib.HTTPConnection('uat.hermes.wha.la', 80)
+				conn.request('POST', '/api/hermes', jvalue, headers)
+				response = conn.getresponse()
+				ret = json.loads(str((response.status, response.reason, response.read())[2]))
 
-
-
-
+			#play
 			value = {
 			"Command": "PLAY",
 			"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7"
@@ -193,15 +216,41 @@ class ServerConnector:
 			config.append(ret['ServerState']['ServerTiers']['DB']['ServerRegions']['EU']['NodeCount'])
 			config.append(ret['ServerState']['ServerTiers']['DB']['ServerRegions']['AP']['NodeCount'])
 
+
 			DS.resetDemand(demand)
 			DS.setConfig(config)
 
 			coef = (ret["ServerState"]["CostPerServer"] / ret["ServerState"]["ProfitConstant"])
 			DS.setCoef(coef)
 
+			# f = open('myfile.txt','w')
+			# f.write(str(ret)) # python will convert \n to os.linesep
+			# f.close()
+
 			conn.close()
 			print 'Turn: ' + str(ret['ServerState']['TurnNo'])
-			print didGrid
+			print "ServerCost: " + str(ret["ServerState"]["CostPerServer"])
+			#print didGrid
+			#if didGrid:
+			try:
+				grid = str(ret["ServerState"]["ResearchUpgradeState"]["GRID"])
+				if grid != "-1":
+					print "---Researching: "+ "GRID" +"---\nTurns Left: " + grid
+				else:
+					print "GRID UPGRADE COMPLETE"
+			except:
+				pass
+
+			try:
+				green = str(ret["ServerState"]["ResearchUpgradeState"]["GREEN"])
+				if green != "-1":
+					print "---Researching: "+ "GREEN" +"---\nTurns Left: " + green
+				else:
+					print "GREEN UPGRADE COMPLETE"
+			except:
+				pass
+				
+				
 			print demand
 			print '  ' + str(config[0]) + '    ' + str(config[1]) + '    ' + str(config[2]) + '    ' + '\n  ' + str(config[3]) + '    ' + str(config[4]) + '    ' + str(config[5]) + '   ' + '\n  ' + str(config[6]) + '    ' + str(config[7]) + '    ' + str(config[8])
 			print ''
