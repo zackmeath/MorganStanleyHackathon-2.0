@@ -59,20 +59,36 @@ class DataStore:
 		return self.demand
 	def getCapacity(self):
 		return self.capacity
-	def getRunningDemand(self):
+	def getRunningDemand(self, num):
 		us = 0
-		for data in self.demandUS:
-			us+=data
-		us = us/len(self.demandUS)
+		i = 0
+		while i < num:
+			us+=self.demandUS[len(self.demandUS)-i]
+			i+=1
+		us = us/i
 
 		eu = 0
-		for data in self.demandEU:
-			eu+=data
-		eu = eu/len(self.demandEU)
+		i = 0
+		while i < num:
+			eu+=self.demandEU[len(self.demandEU)-i]
+			i+=1
+		eu = eu/i
 
 		ap = 0
-		for data in self.demandAP:
-			ap+=data
-		ap = ap/len(self.demandAP)
+		i = 0
+		while i < num:
+			ap+=self.demandAP[len(self.demandAP)-i]
+			i+=1
+		ap = ap/i
+
+		# eu = 0
+		# for data in self.demandEU:
+		# 	eu+=data
+		# eu = eu/len(self.demandEU)
+
+		# ap = 0
+		# for data in self.demandAP:
+		# 	ap+=data
+		# ap = ap/len(self.demandAP)
 
 		return [us,eu,ap]

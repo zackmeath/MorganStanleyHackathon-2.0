@@ -20,7 +20,7 @@ class controller:
 		]
 
 
-		demand = ds.getRunningDemand()
+		demand = ds.getRunningDemand(down)
 		coef = ds.getCoef()
 		jcoef = (cap[1]*coef)/cap[0]
 		dcoef = (cap[2]*jcoef)/cap[1]
@@ -72,7 +72,7 @@ class controller:
 		]
 
 
-		demand = ds.getRunningDemand()
+		demand = ds.getRunningDemand(down)
 		coef = ds.getCoef()
 		if demand[0] + demand[1] + demand[2] < ds.getCoef()*3:
 			return [
@@ -139,7 +139,7 @@ class controller:
 		config[8] * cap[2]
 		]
 
-		demand = ds.getRunningDemand()
+		demand = ds.getRunningDemand(down)
 		coef = ds.getCoef()
 		jcoef = (cap[1]*coef)/cap[0]
 		if demand[0] + demand[1] + demand[2] < ds.getCoef()*3:
