@@ -94,9 +94,31 @@ class ServerConnector:
 					research = "GRID"
 				#p = research
 			#Calculate free space
-			capacity = [ ( ret['ServerState']['ServerTiers']['WEB']['ServerPerformance']['CapactityLevels'][0]['UpperLimit'] + ret['ServerState']['ServerTiers']['WEB']['ServerPerformance']['CapactityLevels'][1]['UpperLimit'] ) / 2]
-			capacity.append(( ret['ServerState']['ServerTiers']['JAVA']['ServerPerformance']['CapactityLevels'][0]['UpperLimit'] + ret['ServerState']['ServerTiers']['JAVA']['ServerPerformance']['CapactityLevels'][1]['UpperLimit'] ) / 2)
-			capacity.append(( ret['ServerState']['ServerTiers']['DB']['ServerPerformance']['CapactityLevels'][0]['UpperLimit'] + ret['ServerState']['ServerTiers']['DB']['ServerPerformance']['CapactityLevels'][1]['UpperLimit'] ) / 2)
+
+			#AVERAGE CAPACITY
+			# capacity = [ ( ret['ServerState']['ServerTiers']['WEB']['ServerPerformance']['CapactityLevels'][0]['UpperLimit'] + ret['ServerState']['ServerTiers']['WEB']['ServerPerformance']['CapactityLevels'][1]['UpperLimit'] ) / 2]
+			# capacity.append(( ret['ServerState']['ServerTiers']['JAVA']['ServerPerformance']['CapactityLevels'][0]['UpperLimit'] + ret['ServerState']['ServerTiers']['JAVA']['ServerPerformance']['CapactityLevels'][1]['UpperLimit'] ) / 2)
+			# capacity.append(( ret['ServerState']['ServerTiers']['DB']['ServerPerformance']['CapactityLevels'][0]['UpperLimit'] + ret['ServerState']['ServerTiers']['DB']['ServerPerformance']['CapactityLevels'][1]['UpperLimit']  ) / 2)
+
+			#97%
+			capacity = [ ( ret['ServerState']['ServerTiers']['WEB']['ServerPerformance']['CapactityLevels'][0]['UpperLimit'] + ret['ServerState']['ServerTiers']['WEB']['ServerPerformance']['CapactityLevels'][1]['UpperLimit']+ ret['ServerState']['ServerTiers']['WEB']['ServerPerformance']['CapactityLevels'][0]['UpperLimit'] ) / 3]
+			capacity.append(( ret['ServerState']['ServerTiers']['JAVA']['ServerPerformance']['CapactityLevels'][0]['UpperLimit'] + ret['ServerState']['ServerTiers']['JAVA']['ServerPerformance']['CapactityLevels'][1]['UpperLimit']  + ret['ServerState']['ServerTiers']['JAVA']['ServerPerformance']['CapactityLevels'][0]['UpperLimit'] ) / 3)
+			capacity.append(( ret['ServerState']['ServerTiers']['DB']['ServerPerformance']['CapactityLevels'][0]['UpperLimit'] + ret['ServerState']['ServerTiers']['DB']['ServerPerformance']['CapactityLevels'][1]['UpperLimit']  + ret['ServerState']['ServerTiers']['DB']['ServerPerformance']['CapactityLevels'][0]['UpperLimit']) / 3)
+
+			#93%
+			# capacity = [ ( ret['ServerState']['ServerTiers']['WEB']['ServerPerformance']['CapactityLevels'][0]['UpperLimit'] + ret['ServerState']['ServerTiers']['WEB']['ServerPerformance']['CapactityLevels'][1]['UpperLimit']+ ret['ServerState']['ServerTiers']['WEB']['ServerPerformance']['CapactityLevels'][1]['UpperLimit'] ) / 3]
+			# capacity.append(( ret['ServerState']['ServerTiers']['JAVA']['ServerPerformance']['CapactityLevels'][0]['UpperLimit'] + ret['ServerState']['ServerTiers']['JAVA']['ServerPerformance']['CapactityLevels'][1]['UpperLimit']  + ret['ServerState']['ServerTiers']['JAVA']['ServerPerformance']['CapactityLevels'][1]['UpperLimit'] ) / 3)
+			# capacity.append(( ret['ServerState']['ServerTiers']['DB']['ServerPerformance']['CapactityLevels'][0]['UpperLimit'] + ret['ServerState']['ServerTiers']['DB']['ServerPerformance']['CapactityLevels'][1]['UpperLimit']  + ret['ServerState']['ServerTiers']['DB']['ServerPerformance']['CapactityLevels'][1]['UpperLimit']) / 3)
+
+			#100% CAPACITY
+			# capacity = [ ret['ServerState']['ServerTiers']['WEB']['ServerPerformance']['CapactityLevels'][0]['UpperLimit']]
+			# capacity.append(ret['ServerState']['ServerTiers']['JAVA']['ServerPerformance']['CapactityLevels'][0]['UpperLimit'])
+			# capacity.append(ret['ServerState']['ServerTiers']['DB']['ServerPerformance']['CapactityLevels'][0]['UpperLimit'])
+
+			# #90% CAPACITY
+			# capacity = [ ret['ServerState']['ServerTiers']['WEB']['ServerPerformance']['CapactityLevels'][1]['UpperLimit']]
+			# capacity.append(ret['ServerState']['ServerTiers']['JAVA']['ServerPerformance']['CapactityLevels'][1]['UpperLimit'])
+			# capacity.append(ret['ServerState']['ServerTiers']['DB']['ServerPerformance']['CapactityLevels'][1]['UpperLimit'])
 
 			DS.setCapacity(capacity)
 			changes = ctrl.calc(DS)
@@ -233,11 +255,11 @@ class ServerConnector:
 			# f.close()
 
 			conn.close()
+			print 'Turn: ' + str(ret['ServerState']['TurnNo'])
 			print "WEB capacity: " + str(capacity[0])
 			print "JAVA capacity: " + str(capacity[1])
 			print "DB capacity: " + str(capacity[2])
-
-			print 'Turn: ' + str(ret['ServerState']['TurnNo'])
+			
 			print "ServerCost: " + str(ret["ServerState"]["CostPerServer"])
 			#print didGrid
 			#if didGrid:
@@ -252,7 +274,7 @@ class ServerConnector:
 				if grid != "-1":
 					print "---Researching: "+ "GRID" +"---\nTurns Left: " + grid
 					if int(grid) <= 1441 and int(grid) >= 1430:
-						infra = True
+						#infra = True
 						pass
 					else:
 						infra = False
