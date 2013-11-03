@@ -81,10 +81,12 @@ class ServerConnector:
 
 				conn.close()
 				x+=1
+			lastProfit = ret["ServerState"]["ProfitEarned"]
+			GridCost = ret["ServerState"]["ResearchUpgradeLevels"][1]["UpgradeCost"]
+			GridTurns = ret["ServerState"]["ResearchUpgradeLevels"][1]["NoOfTurnsRequired"]
+			GridTotalCost = GridTurns * GridCost
 
-			
-
-			if ret['ServerState']['TurnNo'] <= 9000 and ret["ServerState"]["ProfitAccumulated"] >= 1000000:
+			if ret['ServerState']['TurnNo'] <= 9000 and ret["ServerState"]["ProfitAccumulated"] >= GridTotalCost/10 and GridCost < (lastProfit - (lastProfit/3)):
 				didGrid = True
 				try:
 					if ret["ServerState"]["ResearchUpgradeState"]["GRID"] == -1:
@@ -167,7 +169,7 @@ class ServerConnector:
 				
 					},
 					"UpgradeInfraStructure": infra,
-					"UpgradeToResearch": research,
+					"UpgradeToResearch": research
 
 
 				}
@@ -191,23 +193,23 @@ class ServerConnector:
 			conn.request('POST', '/api/hermes', jvalue, headers)
 			response = conn.getresponse()
 			ret = json.loads(str((response.status, response.reason, response.read())[2]))
-			if research != None:
-				research = None
-				jsonchange = {"Servers":{
-					"WEB":{"UpgradeToResearch": "Green"}}}
-				value = {
-				"Command": "CHNG",
-				"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7",
-				#"Token": "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1",
-				"ChangeRequest": jsonchange
-				}
-				headers = {'Content-type': 'application/json','Accept': 'application/json',}
-				jvalue = json.dumps(value)
-				conn = httplib.HTTPConnection('107.20.243.77', 80)
-				#conn = httplib.HTTPConnection('uat.hermes.wha.la', 80)
-				conn.request('POST', '/api/hermes', jvalue, headers)
-				response = conn.getresponse()
-				ret = json.loads(str((response.status, response.reason, response.read())[2]))
+			# if research != None:
+			# 	research = None
+			# 	jsonchange = {"Servers":{
+			# 		"WEB":{"UpgradeToResearch": "Green"}}}
+			# 	value = {
+			# 	"Command": "CHNG",
+			# 	"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7",
+			# 	#"Token": "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1",
+			# 	"ChangeRequest": jsonchange
+			# 	}
+			# 	headers = {'Content-type': 'application/json','Accept': 'application/json',}
+			# 	jvalue = json.dumps(value)
+			# 	conn = httplib.HTTPConnection('107.20.243.77', 80)
+			# 	#conn = httplib.HTTPConnection('uat.hermes.wha.la', 80)
+			# 	conn.request('POST', '/api/hermes', jvalue, headers)
+			# 	response = conn.getresponse()
+			# 	ret = json.loads(str((response.status, response.reason, response.read())[2]))
 
 			#play
 			value = {

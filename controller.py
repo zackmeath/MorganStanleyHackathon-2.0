@@ -46,8 +46,8 @@ class controller:
 			while databaseDemand - dcoef > databaseCurrent:
 				self.changeNums[7]+=1
 				databaseCurrent+=cap[2]
-		elif databaseCurrent > databaseDemand + (cap [2] - dcoef):
-			while databaseCurrent > databaseDemand + (cap [2] - dcoef):
+		elif databaseCurrent > databaseDemand + (cap [2] + dcoef):
+			while databaseCurrent > databaseDemand + (cap [2] + dcoef):
 				#print "while " + str(databaseCurrent) + ' > ' + str(databaseDemand) + " + " + str((cap [2] - (cap[2]/5)))
 				self.changeNums[7]-=1
 				databaseCurrent-=cap[2]
@@ -80,8 +80,8 @@ class controller:
 				self.changeNums[0]+=1
 				current[0]+=cap[0]
 
-		elif current[0] > demand[0] + (cap [0] - coef):
-			while current[0] > demand[0] + (cap [0] - coef):
+		elif current[0] > demand[0] + (cap [0] + coef):
+			while current[0] > demand[0] + (cap [0] + coef):
 				self.changeNums[0]-=1
 				current[0]-=cap[0]
 
@@ -91,8 +91,8 @@ class controller:
 				self.changeNums[1]+=1
 				current[1]+=cap[0]
 
-		elif current[1] > demand[1] + (cap [0] - coef):
-			while current[1] > demand[1] + (cap [0] - coef):
+		elif current[1] > demand[1] + (cap [0] + coef):
+			while current[1] > demand[1] + (cap [0] + coef):
 				self.changeNums[1]-=1
 				current[1]-=cap[0]
 
@@ -102,8 +102,8 @@ class controller:
 				self.changeNums[2]+=1
 				current[2]+=cap[0]
 
-		elif current[2] > demand[2] + (cap [0] - coef):
-			while current[2] > demand[2] + (cap [0] - coef):
+		elif current[2] > demand[2] + (cap [0] + coef):
+			while current[2] > demand[2] + (cap [0] + coef):
 				self.changeNums[2]-=1
 				current[2]-=cap[0]
 
@@ -114,8 +114,8 @@ class controller:
 				self.changeNums[3]+=1
 				current[3]+=cap[1]
 
-		elif current[3] > demand[0] + (cap [1] - jcoef):
-			while current[3] > demand[0] + (cap[1] - jcoef):
+		elif current[3] > demand[0] + (cap [1] + jcoef):
+			while current[3] > demand[0] + (cap[1] + jcoef):
 				self.changeNums[3]-=1
 				current[3]-=cap[1]
 
@@ -125,8 +125,8 @@ class controller:
 				self.changeNums[4]+=1
 				current[4]+=cap[1]
 
-		elif current[4] > demand[1] + (cap [1] - jcoef):
-			while current[4] > demand[1] + (cap[1] - jcoef):
+		elif current[4] > demand[1] + (cap [1] + jcoef):
+			while current[4] > demand[1] + (cap[1] + jcoef):
 				self.changeNums[4]-=1
 				current[4]-=cap[1]
 
@@ -136,8 +136,8 @@ class controller:
 				self.changeNums[5]+=1
 				current[5]+=cap[1]
 
-		elif current[5] > demand[2] + (cap [1] - jcoef):
-			while current[5] > demand[2] + (cap[1] - jcoef):
+		elif current[5] > demand[2] + (cap [1] + jcoef):
+			while current[5] > demand[2] + (cap[1] + jcoef):
 				self.changeNums[5]-=1
 				current[5]-=cap[1]
 		
