@@ -8,7 +8,6 @@ class ServerConnector:
 		value = {
 		"Command": "INIT",
 		"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7"
-		#"Token": "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1"
 		}
 		headers = {
 		            'Content-type': 'application/json',
@@ -17,7 +16,6 @@ class ServerConnector:
 
 		jvalue = json.dumps(value)
 		conn = httplib.HTTPConnection('107.20.243.77', 80)
-		#conn = httplib.HTTPConnection('uat.hermes.wha.la', 80)
 		conn.request('POST', '/api/hermes', jvalue, headers)
 		response = conn.getresponse()
 		ret = json.loads(str((response.status, response.reason, response.read())[2]))
@@ -46,7 +44,6 @@ class ServerConnector:
 				value = {
 				"Command": "PLAY",
 				"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7"
-				#"Token": "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1"
 				}
 				headers = {
 				            'Content-type': 'application/json',
@@ -54,7 +51,6 @@ class ServerConnector:
 				            }
 				jvalue = json.dumps(value)
 				conn = httplib.HTTPConnection('107.20.243.77', 80)
-				#conn = httplib.HTTPConnection('uat.hermes.wha.la', 80)
 				conn.request('POST', '/api/hermes', jvalue, headers)
 				response = conn.getresponse()
 				ret = json.loads(str((response.status, response.reason, response.read())[2]))
@@ -179,7 +175,6 @@ class ServerConnector:
 			value = {
 			"Command": "CHNG",
 			"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7",
-			#"Token": "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1",
 			"ChangeRequest": jsonchange
 			}
 			headers = {
@@ -188,7 +183,6 @@ class ServerConnector:
 			}
 			jvalue = json.dumps(value)
 			conn = httplib.HTTPConnection('107.20.243.77', 80)
-			#conn = httplib.HTTPConnection('uat.hermes.wha.la', 80)
 
 			conn.request('POST', '/api/hermes', jvalue, headers)
 			response = conn.getresponse()
@@ -215,7 +209,6 @@ class ServerConnector:
 			value = {
 			"Command": "PLAY",
 			"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7"
-			#"Token": "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1",
 			}
 			headers = {
 			            'Content-type': 'application/json',
@@ -223,7 +216,6 @@ class ServerConnector:
 			            }
 			jvalue = json.dumps(value)
 			conn = httplib.HTTPConnection('107.20.243.77', 80)
-			#conn = httplib.HTTPConnection('uat.hermes.wha.la', 80)
 			conn.request('POST', '/api/hermes', jvalue, headers)
 			response = conn.getresponse()
 			ret = json.loads(str((response.status, response.reason, response.read())[2]))
