@@ -99,7 +99,7 @@ class ServerConnector:
 				didGrid = True
 				try:
 					if ret["ServerState"]["ResearchUpgradeState"]["GRID"] == -1:
-						#research = "GREEN"
+						research = "GREEN"
 						pass
 				except:
 					research = "GRID"
@@ -137,11 +137,11 @@ class ServerConnector:
 			
 			
 			if turnnumber%WebRefresh == 0:
-				webchanges = ctrl.calcWeb(DS,WebRefresh*2)
+				webchanges = ctrl.calcWeb(DS,WebRefresh)
 			if turnnumber%JavaRefresh == 0:
-				javachanges = ctrl.calcJava(DS,JavaRefresh*2)
+				javachanges = ctrl.calcJava(DS,JavaRefresh)
 			if turnnumber%DBRefresh == 0:
-				dbchanges = ctrl.calcDB(DS,DBRefresh*2)
+				dbchanges = ctrl.calcDB(DS,DBRefresh)
 
 			changes = []
 			changes.append(webchanges[0])

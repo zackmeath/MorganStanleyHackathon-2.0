@@ -63,21 +63,21 @@ class DataStore:
 		us = 0
 		i = 0
 		while i < num:
-			us+=self.demandUS[len(self.demandUS)-i]
+			us+=self.demandUS[len(self.demandUS)-1-i]
 			i+=1
 		us = us/i
 
 		eu = 0
 		i = 0
 		while i < num:
-			eu+=self.demandEU[len(self.demandEU)-i]
+			eu+=self.demandEU[len(self.demandEU)-1-i]
 			i+=1
 		eu = eu/i
 
 		ap = 0
 		i = 0
 		while i < num:
-			ap+=self.demandAP[len(self.demandAP)-i]
+			ap+=self.demandAP[len(self.demandAP)-1-i]
 			i+=1
 		ap = ap/i
 
