@@ -85,8 +85,8 @@ class ServerConnector:
 			# 	DS.avgDemand(demand)
 			DS.runningDemand(demand)
 			DS.setConfig(config)
-			coef = (ret["ServerState"]["CostPerServer"] / ret["ServerState"]["ProfitConstant"])
-			DS.setCoef(coef)
+			# coef = (ret["ServerState"]["CostPerServer"] / ret["ServerState"]["ProfitConstant"])
+			# DS.setCoef(coef)
 			
 
 			conn.close()
