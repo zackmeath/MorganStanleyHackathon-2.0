@@ -7,8 +7,7 @@ class ServerConnector:
  	def __init__(self):
  		tok = "8051bf89-e115-4147-8e5a-ff9d6f39f0d7"
  		url = "hermes.wha.la"
- 		# tok = "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1"
- 		# url = "uat.hermes.wha.la"
+ 		
 		value = {
 		"Command": "INIT",
 		"Token": tok
@@ -85,8 +84,8 @@ class ServerConnector:
 			# 	DS.avgDemand(demand)
 			DS.runningDemand(demand)
 			DS.setConfig(config)
-			# coef = (ret["ServerState"]["CostPerServer"] / ret["ServerState"]["ProfitConstant"])
-			# DS.setCoef(coef)
+			coef = (ret["ServerState"]["CostPerServer"] / ret["ServerState"]["ProfitConstant"])
+			DS.setCoef(coef)
 			
 
 			conn.close()
@@ -96,6 +95,7 @@ class ServerConnector:
 			GridTurns = ret["ServerState"]["ResearchUpgradeLevels"][1]["NoOfTurnsRequired"]
 			GridTotalCost = GridTurns * GridCost
 
+			#init research when its swaggin to do so
 			if ret['ServerState']['TurnNo'] <= 9000 and ret["ServerState"]["ProfitAccumulated"] >= GridTotalCost/9 and GridCost < (lastProfit - (lastProfit/3)):
 				didGrid = True
 				try:
@@ -132,6 +132,7 @@ class ServerConnector:
 			# capacity = [ ret['ServerState']['ServerTiers']['WEB']['ServerPerformance']['CapactityLevels'][1]['UpperLimit']]
 			# capacity.append(ret['ServerState']['ServerTiers']['JAVA']['ServerPerformance']['CapactityLevels'][1]['UpperLimit'])
 			# capacity.append(ret['ServerState']['ServerTiers']['DB']['ServerPerformance']['CapactityLevels'][1]['UpperLimit'])
+
 			DS.setCapacity(capacity)
 			webchanges = [0,0,0,0,0,0,0,0,0]
 			javachanges = [0,0,0,0,0,0,0,0,0]
@@ -139,12 +140,13 @@ class ServerConnector:
 			
 			
 			if turnnumber%WebRefresh == 0:
-				webchanges = ctrl.calcWeb(DS,WebRefresh)
+				webchanges = ctrl.calcWeb(DS,WebRefresh*1.5)
 			if turnnumber%JavaRefresh == 0:
-				javachanges = ctrl.calcJava(DS,JavaRefresh)
+				javachanges = ctrl.calcJava(DS,JavaRefresh*1.5 )
 			if turnnumber%DBRefresh == 0:
-				dbchanges = ctrl.calcDB(DS,DBRefresh)
+				dbchanges = ctrl.calcDB(DS,DBRefresh*1.5)
 
+			#create 'changes' to know what servers to bring up/down
 			changes = []
 			changes.append(webchanges[0])
 			changes.append(webchanges[1])
@@ -226,8 +228,9 @@ class ServerConnector:
 			conn.close()
 			
 
-
+			#print Stuff
 			print 'Turn: ' + str(ret['ServerState']['TurnNo'])
+			print 'Total Profit: $' + str(ret["ServerState"]["ProfitAccumulated"])
 			# print "WEB capacity: " + str(capacity[0])
 			# print "JAVA capacity: " + str(capacity[1])
 			# print "DB capacity: " + str(capacity[2])
