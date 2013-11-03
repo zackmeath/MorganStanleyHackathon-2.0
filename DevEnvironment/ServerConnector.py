@@ -5,10 +5,13 @@ import httplib, json, socket
 
 class ServerConnector:
  	def __init__(self):
+ 		tok = "8051bf89-e115-4147-8e5a-ff9d6f39f0d7"
+ 		url = "hermes.wha.la"
+ 		# tok = "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1"
+ 		# url = "uat.hermes.wha.la"
 		value = {
 		"Command": "INIT",
-		#"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7"
-		"Token": "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1"
+		"Token": tok
 		}
 		headers = {
 		            'Content-type': 'application/json',
@@ -16,8 +19,7 @@ class ServerConnector:
 		            }
 
 		jvalue = json.dumps(value)
-		#conn = httplib.HTTPConnection('107.20.243.77', 80)
-		conn = httplib.HTTPConnection('uat.hermes.wha.la', 80)
+		conn = httplib.HTTPConnection(url, 80)
 		conn.request('POST', '/api/hermes', jvalue, headers)
 		response = conn.getresponse()
 		ret = json.loads(str((response.status, response.reason, response.read())[2]))
@@ -48,24 +50,22 @@ class ServerConnector:
 
 			value = {
 			"Command": "PLAY",
-			#"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7"
-			"Token": "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1"
+			"Token": tok
 			}
 			headers = {
 			            'Content-type': 'application/json',
 			            'Accept': 'application/json',
 			            }
 			jvalue = json.dumps(value)
-			#conn = httplib.HTTPConnection('107.20.243.77', 80)
-			conn = httplib.HTTPConnection('uat.hermes.wha.la', 80)
+			conn = httplib.HTTPConnection(url, 80)
 			conn.request('POST', '/api/hermes', jvalue, headers)
 			response = conn.getresponse()
 			ret = json.loads(str((response.status, response.reason, response.read())[2]))
 			turnnumber = ret['ServerState']['TurnNo']
 			#Get demand from server
-			demand = [ret['ServerState']['ServerTiers']['DB']['ServerRegions']['NA']['NoOfTransactionsInput']]
-			demand.append(ret['ServerState']['ServerTiers']['DB']['ServerRegions']['EU']['NoOfTransactionsInput'])
-			demand.append(ret['ServerState']['ServerTiers']['DB']['ServerRegions']['AP']['NoOfTransactionsInput'])
+			demand = [ret['ServerState']['ServerTiers']['WEB']['ServerRegions']['NA']['NoOfTransactionsInput']]
+			demand.append(ret['ServerState']['ServerTiers']['WEB']['ServerRegions']['EU']['NoOfTransactionsInput'])
+			demand.append(ret['ServerState']['ServerTiers']['WEB']['ServerRegions']['AP']['NoOfTransactionsInput'])
 			
 			config = [ret['ServerState']['ServerTiers']['WEB']['ServerRegions']['NA']['NodeCount']]
 			config.append(ret['ServerState']['ServerTiers']['WEB']['ServerRegions']['EU']['NodeCount'])
@@ -210,8 +210,7 @@ class ServerConnector:
 
 			value = {
 			"Command": "CHNG",
-			#"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7",
-			"Token": "7440b0b0-c5a2-4ab3-bdc3-8935865bb9d1",
+			"Token": tok,
 			"ChangeRequest": jsonchange
 			}
 			headers = {
@@ -219,8 +218,7 @@ class ServerConnector:
 			            'Accept': 'application/json',
 			}
 			jvalue = json.dumps(value)
-			#conn = httplib.HTTPConnection('107.20.243.77', 80)
-			conn = httplib.HTTPConnection('uat.hermes.wha.la', 80)
+			conn = httplib.HTTPConnection(url, 80)
 
 			conn.request('POST', '/api/hermes', jvalue, headers)
 			response = conn.getresponse()
