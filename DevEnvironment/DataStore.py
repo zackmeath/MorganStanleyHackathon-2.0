@@ -1,8 +1,12 @@
 class DataStore:
-	def __init__(self):
+	def __init__(self, numOfValues):
 		self.demand = [0,0,0]
 		self.config = [0,0,0,0,0,0,0,0,0]
 		self.capacity = [0,0,0]
+		self.demandUS = []
+		self.demandEU = []
+		self.demandAP = []
+		self.valuesToStore = numOfValues
 
 	def avgDemand(self, demand):
 		#take in "demand" data and store it into the list self.demand (average it)
@@ -17,6 +21,27 @@ class DataStore:
 		self.demand[1] = demand[1]
 		self.demand[2] = demand[2]
 
+	def runningDemand(self,demand):
+		if len(self.demandUS) < self.valuesToStore:
+			self.demandUS.append(demand[0])
+			self.demandEU.append(demand[1])
+			self.demandAP.append(demand[2])
+		else:
+			i = 0
+			while i < self.valuesToStore-1:
+				self.demandUS[i] = self.demandUS[i+1]
+				i+=1
+			self.demandUS[i] = demand[0]
+			i = 0
+			while i < self.valuesToStore-1:
+				self.demandEU[i] = self.demandEU[i+1]
+				i+=1
+			self.demandEU[i] = demand[1]
+			i = 0
+			while i < self.valuesToStore-1:
+				self.demandAP[i] = self.demandAP[i+1]
+				i+=1
+			self.demandAP[i] = demand[2]
 	def setConfig(self, iconfig):
 		#take in "iconfig" data and store it into the list self.config
 		self.config = iconfig
@@ -34,3 +59,20 @@ class DataStore:
 		return self.demand
 	def getCapacity(self):
 		return self.capacity
+	def getRunningDemand(self):
+		us = 0
+		for data in self.demandUS:
+			us+=data
+		us = us/len(self.demandUS)
+
+		eu = 0
+		for data in self.demandEU:
+			eu+=data
+		eu = eu/len(self.demandEU)
+
+		ap = 0
+		for data in self.demandAP:
+			ap+=data
+		ap = ap/len(self.demandAP)
+
+		return [us,eu,ap]

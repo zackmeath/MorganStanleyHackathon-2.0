@@ -3,7 +3,7 @@ class controller:
 	def __init__(self):
 		self.changeNums = [0,0,0,0,0,0,0,0,0]
 
-	def calcDB(self,ds):
+	def calcDB(self,ds,down):
 		self.changeNums = [0,0,0,0,0,0,0,0,0]
 		cap = ds.getCapacity()
 		config = ds.getConfig()
@@ -20,7 +20,7 @@ class controller:
 		]
 
 
-		demand = ds.getDemand()
+		demand = ds.getRunningDemand()
 		coef = ds.getCoef()
 		jcoef = (cap[1]*coef)/cap[0]
 		dcoef = (cap[2]*jcoef)/cap[1]
@@ -28,7 +28,7 @@ class controller:
 		#only use EU DB
 		databaseDemand = demand[0] + demand[1] + demand[2]
 		databaseCurrent = config[7] * cap[2]
-		if databaseDemand < 25:
+		if databaseDemand < ds.getCoef()*3:
 			return [
 			-1*config[0],
 			-1*config[1],
@@ -54,7 +54,7 @@ class controller:
 
 
 
-	def calcWeb(self,ds):
+	def calcWeb(self,ds,down):
 		#return list of changes
 		self.changeNums = [0,0,0,0,0,0,0,0,0]
 		cap = ds.getCapacity()
@@ -72,9 +72,9 @@ class controller:
 		]
 
 
-		demand = ds.getDemand()
+		demand = ds.getRunningDemand()
 		coef = ds.getCoef()
-		if demand[0] + demand[1] + demand[2] < 25:
+		if demand[0] + demand[1] + demand[2] < ds.getCoef()*3:
 			return [
 			-1*config[0],
 			-1*config[1],
@@ -122,7 +122,7 @@ class controller:
 		return self.changeNums
 
 
-	def calcJava(self,ds):
+	def calcJava(self,ds,down):
 		#return list of changes
 		self.changeNums = [0,0,0,0,0,0,0,0,0]
 		cap = ds.getCapacity()
@@ -139,10 +139,10 @@ class controller:
 		config[8] * cap[2]
 		]
 
-		demand = ds.getDemand()
+		demand = ds.getRunningDemand()
 		coef = ds.getCoef()
 		jcoef = (cap[1]*coef)/cap[0]
-		if demand[0] + demand[1] + demand[2] < 25:
+		if demand[0] + demand[1] + demand[2] < ds.getCoef()*3:
 			return [
 			-1*config[0],
 			-1*config[1],

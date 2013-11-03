@@ -22,7 +22,7 @@ class ServerConnector:
 		response = conn.getresponse()
 		ret = json.loads(str((response.status, response.reason, response.read())[2]))
 		conn.close()
-		DS = DataStore()
+		DS = DataStore(ret["ServerState"]["ServerTiers"]["DB"]["ServerStartTurnTime"])
 		ctrl = controller()
 		myFile = open('output.txt', 'w')
 		myFile.write(str(ret))
@@ -46,7 +46,6 @@ class ServerConnector:
 		while True:
 			x = 0
 
-			
 			value = {
 			"Command": "PLAY",
 			"Token": "8051bf89-e115-4147-8e5a-ff9d6f39f0d7"
@@ -62,7 +61,7 @@ class ServerConnector:
 			conn.request('POST', '/api/hermes', jvalue, headers)
 			response = conn.getresponse()
 			ret = json.loads(str((response.status, response.reason, response.read())[2]))
-
+			turnnumber = ret['ServerState']['TurnNo']
 			#Get demand from server
 			demand = [ret['ServerState']['ServerTiers']['DB']['ServerRegions']['NA']['NoOfTransactionsInput']]
 			demand.append(ret['ServerState']['ServerTiers']['DB']['ServerRegions']['EU']['NoOfTransactionsInput'])
@@ -80,7 +79,11 @@ class ServerConnector:
 			config.append(ret['ServerState']['ServerTiers']['DB']['ServerRegions']['EU']['NodeCount'])
 			config.append(ret['ServerState']['ServerTiers']['DB']['ServerRegions']['AP']['NodeCount'])
 
-			DS.avgDemand(demand)
+			# if turnnumber % (DBRefresh*2):
+			# 	DS.resetDemand(demand)
+			# else:
+			# 	DS.avgDemand(demand)
+			DS.runningDemand(demand)
 			DS.setConfig(config)
 			coef = (ret["ServerState"]["CostPerServer"] / ret["ServerState"]["ProfitConstant"])
 			DS.setCoef(coef)
@@ -132,13 +135,13 @@ class ServerConnector:
 			javachanges = [0,0,0,0,0,0,0,0,0]
 			dbchanges = [0,0,0,0,0,0,0,0,0]
 			
-			turnnumber = ret['ServerState']['TurnNo']
+			
 			if turnnumber%WebRefresh == 0:
-				webchanges = ctrl.calcWeb(DS)
+				webchanges = ctrl.calcWeb(DS,WebRefresh*2)
 			if turnnumber%JavaRefresh == 0:
-				javachanges = ctrl.calcJava(DS)
+				javachanges = ctrl.calcJava(DS,JavaRefresh*2)
 			if turnnumber%DBRefresh == 0:
-				dbchanges = ctrl.calcDB(DS)
+				dbchanges = ctrl.calcDB(DS,DBRefresh*2)
 
 			changes = []
 			changes.append(webchanges[0])
@@ -235,7 +238,8 @@ class ServerConnector:
 			try:
 				inf = str(ret["ServerState"]["InfraStructureUpgradeState"]["Value"])
 				if inf >=0:
-					print "INFRA value: " + inf
+					#print "INFRA value: " + inf
+					pass
 			except:
 		 		pass
 			try:
