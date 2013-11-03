@@ -31,6 +31,7 @@ class ServerConnector:
 		coef = (ret["ServerState"]["CostPerServer"] / ret["ServerState"]["ProfitConstant"])
 
 		DS.setCoef(coef)
+		infra = False
 		p = None
 		research = None
 		didGrid = False
@@ -83,14 +84,15 @@ class ServerConnector:
 
 			
 
-			if ret['ServerState']['TurnNo'] <= 9000 and ret["ServerState"]["ProfitAccumulated"] >= 750000:
+			if ret['ServerState']['TurnNo'] <= 9000 and ret["ServerState"]["ProfitAccumulated"] >= 1000000:
 				didGrid = True
 				try:
 					if ret["ServerState"]["ResearchUpgradeState"]["GRID"] == -1:
-						research = "GREEN"
+						#research = "GREEN"
+						pass
 				except:
 					research = "GRID"
-				p = research
+				#p = research
 			#Calculate free space
 			capacity = [ ( ret['ServerState']['ServerTiers']['WEB']['ServerPerformance']['CapactityLevels'][0]['UpperLimit'] + ret['ServerState']['ServerTiers']['WEB']['ServerPerformance']['CapactityLevels'][1]['UpperLimit'] ) / 2]
 			capacity.append(( ret['ServerState']['ServerTiers']['JAVA']['ServerPerformance']['CapactityLevels'][0]['UpperLimit'] + ret['ServerState']['ServerTiers']['JAVA']['ServerPerformance']['CapactityLevels'][1]['UpperLimit'] ) / 2)
@@ -142,7 +144,10 @@ class ServerConnector:
 					}
 				
 					},
-					"UpgradeToResearch": research
+					"UpgradeInfraStructure": infra,
+					"UpgradeToResearch": research,
+
+
 				}
 			if research != None:
 				research = None
@@ -228,14 +233,29 @@ class ServerConnector:
 			# f.close()
 
 			conn.close()
+			print "WEB capacity: " + str(capacity[0])
+			print "JAVA capacity: " + str(capacity[1])
+			print "DB capacity: " + str(capacity[2])
+
 			print 'Turn: ' + str(ret['ServerState']['TurnNo'])
 			print "ServerCost: " + str(ret["ServerState"]["CostPerServer"])
 			#print didGrid
 			#if didGrid:
 			try:
+				inf = str(ret["ServerState"]["InfraStructureUpgradeState"]["Value"])
+				if inf >=0:
+					print "INFRA value: " + inf
+			except:
+		 		pass
+			try:
 				grid = str(ret["ServerState"]["ResearchUpgradeState"]["GRID"])
 				if grid != "-1":
 					print "---Researching: "+ "GRID" +"---\nTurns Left: " + grid
+					if int(grid) <= 1441 and int(grid) >= 1430:
+						infra = True
+						pass
+					else:
+						infra = False
 				else:
 					print "GRID UPGRADE COMPLETE"
 			except:
