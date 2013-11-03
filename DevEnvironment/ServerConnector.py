@@ -96,7 +96,7 @@ class ServerConnector:
 			GridTotalCost = GridTurns * GridCost
 
 			#init research when its swaggin to do so
-			if ret['ServerState']['TurnNo'] <= 9000 and ret["ServerState"]["ProfitAccumulated"] >= GridTotalCost/9 and GridCost < (lastProfit - (lastProfit/3)):
+			if ret['ServerState']['TurnNo'] <= 2000 and ret["ServerState"]["ProfitAccumulated"] >= GridTotalCost/8 and GridCost < (lastProfit - (lastProfit/3)):
 				didGrid = True
 				try:
 					if ret["ServerState"]["ResearchUpgradeState"]["GRID"] == -1:
